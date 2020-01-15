@@ -1,5 +1,5 @@
 {
-    "name"        : "oasis/php-dynamodb-odm",
+    "name"        : "darlinkster/php-dynamodb-odm",
     "description" : "ODM for dynamodb",
     "type"        : "library",
     "require"     : {
