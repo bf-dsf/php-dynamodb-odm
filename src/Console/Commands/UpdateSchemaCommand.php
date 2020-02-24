@@ -73,6 +73,8 @@ class UpdateSchemaCommand extends AbstractSchemaCommand
                     foreach ($itemDef->globalSecondaryIndices as $globalSecondaryIndex) {
                         $gsis[] = $globalSecondaryIndex->getDynamodbIndex($fieldNameMapping, $attributeTypes);
                     }
+
+                    $provisionedBilling = $itemDef->billingType === DynamoDbManager::PROVISIONED;
                     
                     $tableName = $im->getDefaultTablePrefix() . $reflection->getTableName();
                     
@@ -83,7 +85,10 @@ class UpdateSchemaCommand extends AbstractSchemaCommand
                             $tableName,
                             $itemDef->primaryIndex->getDynamodbIndex($fieldNameMapping, $attributeTypes),
                             $lsis,
-                            $gsis
+                            $gsis,
+                            5,
+                            5,
+                            $provisionedBilling
                         );
                         
                         $output->writeln('Created.');
