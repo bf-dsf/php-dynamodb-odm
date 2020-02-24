@@ -9,8 +9,8 @@
 namespace Darlinkster\Mlib\ODM\Dynamodb\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\Required;
-use Oasis\Mlib\AwsWrappers\DynamoDbIndex;
-use Oasis\Mlib\AwsWrappers\DynamoDbItem;
+use Darlinkster\Mlib\AwsWrappers\DynamoDbIndex;
+use Darlinkster\Mlib\AwsWrappers\DynamoDbItem;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\AnnotationParsingException;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 

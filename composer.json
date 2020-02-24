@@ -26,12 +26,12 @@
     ],
     "autoload"    : {
         "psr-4": {
-            "Oasis\\Mlib\\ODM\\Dynamodb\\": "src/"
+            "Darlinkster\\Mlib\\ODM\\Dynamodb\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Oasis\\Mlib\\ODM\\Dynamodb\\Ut\\": "ut/"
+            "Darlinkster\\Mlib\\ODM\\Dynamodb\\Ut\\": "ut/"
         }
     },
     "bin"         : [

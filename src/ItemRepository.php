@@ -8,8 +8,8 @@
 
 namespace Darlinkster\Mlib\ODM\Dynamodb;
 
-use Oasis\Mlib\AwsWrappers\DynamoDbIndex;
-use Oasis\Mlib\AwsWrappers\DynamoDbTable;
+use Darlinkster\Mlib\AwsWrappers\DynamoDbIndex;
+use Darlinkster\Mlib\AwsWrappers\DynamoDbTable;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\UnderlyingDatabaseException;

@@ -8,9 +8,9 @@
 
 namespace Darlinkster\Mlib\ODM\Dynamodb\Console\Commands;
 
-use Oasis\Mlib\AwsWrappers\DynamoDbIndex;
-use Oasis\Mlib\AwsWrappers\DynamoDbManager;
-use Oasis\Mlib\AwsWrappers\DynamoDbTable;
+use Darlinkster\Mlib\AwsWrappers\DynamoDbIndex;
+use Darlinkster\Mlib\AwsWrappers\DynamoDbManager;
+use Darlinkster\Mlib\AwsWrappers\DynamoDbTable;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 use Darlinkster\Mlib\ODM\Dynamodb\ItemReflection;
 use Symfony\Component\Console\Input\InputInterface;

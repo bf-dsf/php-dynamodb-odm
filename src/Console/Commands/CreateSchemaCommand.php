@@ -8,7 +8,7 @@
 
 namespace Darlinkster\Mlib\ODM\Dynamodb\Console\Commands;
 
-use Oasis\Mlib\AwsWrappers\DynamoDbManager;
+use Darlinkster\Mlib\AwsWrappers\DynamoDbManager;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;

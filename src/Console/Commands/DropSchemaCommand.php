@@ -9,7 +9,7 @@
 namespace Darlinkster\Mlib\ODM\Dynamodb\Console\Commands;
 
 use Aws\DynamoDb\Exception\DynamoDbException;
-use Oasis\Mlib\AwsWrappers\DynamoDbManager;
+use Darlinkster\Mlib\AwsWrappers\DynamoDbManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
