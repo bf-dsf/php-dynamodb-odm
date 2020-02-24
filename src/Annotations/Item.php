@@ -10,6 +10,7 @@ namespace Oasis\Mlib\ODM\Dynamodb\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Target;
+use Oasis\Mlib\AwsWrappers\DynamoDbManager;
 
 /**
  * Class Item
@@ -19,11 +20,6 @@ use Doctrine\Common\Annotations\Annotation\Target;
  */
 class Item
 {
-    /** @var string */
-    const PROVISIONED       = 'PROVISIONED';
-    /** @var string */
-    const PAY_PER_REQUEST   = 'PAY_PER_REQUEST';
-
     /**
      * @var string
      * @Required()
@@ -35,7 +31,7 @@ class Item
      * @var string
      * @Enum(value={"PROVISIONED", "PAY_PER_REQUEST"})
      */
-    public $billingType = self::PROVISIONED;
+    public $billingType = DynamoDbManager::PROVISIONED;
     /**
      * @var array|Index
      * @Required()

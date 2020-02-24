@@ -3,13 +3,13 @@
     "description" : "ODM for dynamodb",
     "type"        : "library",
     "require"     : {
-        "php"                 : "^7.1.3",
-        "doctrine/annotations": "^1.4",
-        "oasis/aws-wrappers"  : "^2.10",
-        "oasis/logging"       : "^1.0",
-        "doctrine/common"     : "^2.7",
-        "symfony/console"     : "^4.4",
-        "symfony/finder"      : "^4.4"
+        "php"                       : "^7.1.3",
+        "doctrine/annotations"      : "^1.4",
+        "darlinkster/aws-wrappers"  : "^2.11",
+        "oasis/logging"             : "^1.0",
+        "doctrine/common"           : "^2.7",
+        "symfony/console"           : "^4.4",
+        "symfony/finder"            : "^4.4"
     },
     "require-dev" : {
         "phpunit/phpunit": "^7.5"
