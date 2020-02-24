@@ -6,7 +6,7 @@
  * Time: 18:41
  */
 
-namespace Oasis\Mlib\ODM\Dynamodb\Console\Commands;
+namespace Darlinkster\Mlib\ODM\Dynamodb\Console\Commands;
 
 use Aws\DynamoDb\Exception\DynamoDbException;
 use Oasis\Mlib\AwsWrappers\DynamoDbManager;

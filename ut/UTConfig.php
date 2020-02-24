@@ -1,6 +1,6 @@
 <?php
 
-namespace Oasis\Mlib\ODM\Dynamodb\Ut;
+namespace Darlinkster\Mlib\ODM\Dynamodb\Ut;
 
 use Symfony\Component\Yaml\Yaml;
 

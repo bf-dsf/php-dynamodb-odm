@@ -6,13 +6,13 @@
  * Time: 19:13
  */
 
-namespace Oasis\Mlib\ODM\Dynamodb;
+namespace Darlinkster\Mlib\ODM\Dynamodb;
 
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\FilesystemCache;
-use Oasis\Mlib\ODM\Dynamodb\Exceptions\ODMException;
+use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 use Symfony\Component\Finder\Finder;
 
 class ItemManager

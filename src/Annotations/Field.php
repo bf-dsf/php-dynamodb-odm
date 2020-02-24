@@ -6,7 +6,7 @@
  * Time: 17:04
  */
 
-namespace Oasis\Mlib\ODM\Dynamodb\Annotations;
+namespace Darlinkster\Mlib\ODM\Dynamodb\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\Enum;
 use Doctrine\Common\Annotations\Annotation\Target;

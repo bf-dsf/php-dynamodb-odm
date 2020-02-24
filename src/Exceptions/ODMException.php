@@ -6,7 +6,7 @@
  * Time: 10:42
  */
 
-namespace Oasis\Mlib\ODM\Dynamodb\Exceptions;
+namespace Darlinkster\Mlib\ODM\Dynamodb\Exceptions;
 
 class ODMException extends \RuntimeException
 {

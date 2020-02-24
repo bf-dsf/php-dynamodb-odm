@@ -6,15 +6,15 @@
  * Time: 4:42 PM
  */
 
-namespace Oasis\Mlib\ODM\Dynamodb\Ut;
+namespace Darlinkster\Mlib\ODM\Dynamodb\Ut;
 
-use Oasis\Mlib\ODM\Dynamodb\Annotations\Field;
-use Oasis\Mlib\ODM\Dynamodb\Annotations\Item;
+use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Field;
+use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Item;
 
 /**
  * Class BasicGameInfo
  *
- * @package Oasis\Mlib\ODM\Dynamodb\Ut
+ * @package Darlinkster\Mlib\ODM\Dynamodb\Ut
  * @Item(
  *     table="games",
  *     primaryIndex={"gamecode"},

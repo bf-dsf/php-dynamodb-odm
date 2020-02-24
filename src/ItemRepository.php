@@ -6,13 +6,13 @@
  * Time: 12:17
  */
 
-namespace Oasis\Mlib\ODM\Dynamodb;
+namespace Darlinkster\Mlib\ODM\Dynamodb;
 
 use Oasis\Mlib\AwsWrappers\DynamoDbIndex;
 use Oasis\Mlib\AwsWrappers\DynamoDbTable;
-use Oasis\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException;
-use Oasis\Mlib\ODM\Dynamodb\Exceptions\ODMException;
-use Oasis\Mlib\ODM\Dynamodb\Exceptions\UnderlyingDatabaseException;
+use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException;
+use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
+use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\UnderlyingDatabaseException;
 
 class ItemRepository
 {

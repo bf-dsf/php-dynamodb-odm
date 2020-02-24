@@ -1,15 +1,15 @@
 # Object Data Mapping component for DynamoDb
 
-The oasis/dynamodb-odm is an ODM (object data mapping) library for easy use of AWS' powerful key-value database: DynamoDb.
+The darlinkster/dynamodb-odm is an ODM (object data mapping) library for easy use of AWS' powerful key-value database: DynamoDb.
 
 > **NOTE**: this document assumes you have some understanding of what DynamoDB is and the difference between DynamoDB and traditional RDBMS (e.g. MySQL). Some terms and ideas discussed in this document are DynamoDB specific and will not be explained in this documentation. To study DynamoDB, please refer to the [official dev guide](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide)
 
 ## Installation &amp; Configuration
 
-To get oasis/dynamodb-odm, you can simple require it via `composer`:
+To get darlinkster/dynamodb-odm, you can simple require it via `composer`:
 
 ```bash
-$ composer require oasis/dynamodb-odm
+$ composer require darlinkster/dynamodb-odm
 ```
 
 ### Class Loading
@@ -28,7 +28,7 @@ Once you have prepared the class loading, you acquire an **ItemManager** instanc
 
 ```php
 <?php
-use Oasis\Mlib\ODM\Dynamodb\ItemManager;
+use Darlinkster\Mlib\ODM\Dynamodb\ItemManager;
 
 $awsConfig     = [
     "profile" => "oasis-minhao",
@@ -37,7 +37,7 @@ $awsConfig     = [
 $tablePrefix   = "odm-";
 $cacheDir      = __DIR__ . "/ut/cache";
 $isDev         = true;
-$itemNamespace = 'Oasis\Mlib\ODM\Dynamodb\Ut'; // in practice, this usually looks like: My\Root\Namespace\Items
+$itemNamespace = 'Darlinkster\Mlib\ODM\Dynamodb\Ut'; // in practice, this usually looks like: My\Root\Namespace\Items
 $itemSrcDir    = __DIR__ . "/ut"; // in practice, this usually points to src/Items directory
 
 $im = new ItemManager(
@@ -78,7 +78,7 @@ You need to register your application's `ItemManager` to the console tool to mak
 
 ```php
 <?php
-use Oasis\Mlib\ODM\Dynamodb\Console\ConsoleHelper;
+use Darlinkster\Mlib\ODM\Dynamodb\Console\ConsoleHelper;
 
 // replace with file to your own project bootstrap
 require_once 'bootstrap.php';
@@ -98,8 +98,8 @@ The fundamental functionality of an ODM library is to map object models (i.e. cl
 
 ```php
 <?php
-use Oasis\Mlib\ODM\Dynamodb\Annotations\Field;
-use Oasis\Mlib\ODM\Dynamodb\Annotations\Item;
+use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Field;
+use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Item;
 
 /**
  * @Item(
@@ -136,7 +136,7 @@ Class annotated with the _@Item_ annotation will be managed by ItemManager. An I
 - **primaryIndex**: primary index, wich can be either an array of keys, or an [_@Index_](#index) annotation object
 - **globalSecondaryIndices**: array of global secondary indices; a global secondary index is either an array of keys, or an _@Index_ annotation object
 - **localSecondaryIndices**: array of local secondary indices; a local secondary index is either an array of keys, or an _@Index_ annotation object
-- **repository**: the repository class name; by default, `\Oasis\Mlib\ODM\Dynamodb\ItemRepository` is used
+- **repository**: the repository class name; by default, `\Darlinkster\Mlib\ODM\Dynamodb\ItemRepository` is used
 - **projected**: whether this item is projected only. _Projected Item_ is not updatable (remove action is allowed). And when reading (i.e. get/query/scan) a projected item, only attrbutes for this item will be fetched from DynamoDB.
 
 #### Field
@@ -213,7 +213,7 @@ The value of the "cas" property can be one of the following:
 - _enabled_: the old value of this field will be checked when updating the item. When inserting an item, this field must either posses a NULL value, or be absent.
 - _timestamp_: this is a special type of enabled cas property. Every time an item is updated/inserted, the value of this field will automatically be set to the current timestamp.
 
-> **NOTE**: Check-and-set validation is done only when you call `ItemManger#flush()`. Failure to meet the check and set condition(s) will lead to an `Oasis\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException` being thrown.
+> **NOTE**: Check-and-set validation is done only when you call `ItemManger#flush()`. Failure to meet the check and set condition(s) will lead to an `Darlinkster\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException` being thrown.
 
 ## Working with Objects
 

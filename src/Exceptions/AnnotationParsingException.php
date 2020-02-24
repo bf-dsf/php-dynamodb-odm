@@ -6,7 +6,7 @@
  * Time: 14:29
  */
 
-namespace Oasis\Mlib\ODM\Dynamodb\Exceptions;
+namespace Darlinkster\Mlib\ODM\Dynamodb\Exceptions;
 
 class AnnotationParsingException extends ODMException
 {

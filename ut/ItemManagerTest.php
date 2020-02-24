@@ -6,12 +6,12 @@
  * Time: 20:56
  */
 
-namespace Oasis\Mlib\ODM\Dynamodb\Ut;
+namespace Darlinkster\Mlib\ODM\Dynamodb\Ut;
 
 use Oasis\Mlib\AwsWrappers\DynamoDbIndex;
-use Oasis\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException;
-use Oasis\Mlib\ODM\Dynamodb\Exceptions\ODMException;
-use Oasis\Mlib\ODM\Dynamodb\ItemManager;
+use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException;
+use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
+use Darlinkster\Mlib\ODM\Dynamodb\ItemManager;
 
 class ItemManagerTest extends \PHPUnit_Framework_TestCase
 {

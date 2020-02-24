@@ -7,9 +7,9 @@
  * Time: 17:01
  */
 
-use Oasis\Mlib\ODM\Dynamodb\ItemManager;
-use Oasis\Mlib\ODM\Dynamodb\Ut\CasDemoUser;
-use Oasis\Mlib\ODM\Dynamodb\Ut\UTConfig;
+use Darlinkster\Mlib\ODM\Dynamodb\ItemManager;
+use Darlinkster\Mlib\ODM\Dynamodb\Ut\CasDemoUser;
+use Darlinkster\Mlib\ODM\Dynamodb\Ut\UTConfig;
 
 require_once __DIR__ . "/vendor/autoload.php";
 

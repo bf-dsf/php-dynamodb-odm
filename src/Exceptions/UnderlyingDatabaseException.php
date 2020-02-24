@@ -6,7 +6,7 @@
  * Time: 10:39
  */
 
-namespace Oasis\Mlib\ODM\Dynamodb\Exceptions;
+namespace Darlinkster\Mlib\ODM\Dynamodb\Exceptions;
 
 class UnderlyingDatabaseException extends ODMException
 {
