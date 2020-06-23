@@ -140,6 +140,8 @@ class UpdateSchemaCommand extends AbstractSchemaCommand
                         )
                     );
                 }
+
+                $provisionedBilling = $itemDef->billingType === DynamoDbManager::PROVISIONED;
                 
                 $oldGsis = $table->getGlobalSecondaryIndices();
                 foreach ($itemDef->globalSecondaryIndices as $globalSecondaryIndex) {
@@ -154,7 +156,8 @@ class UpdateSchemaCommand extends AbstractSchemaCommand
                             $class,
                             $tableName,
                             $table,
-                            $idx
+                            $idx,
+                            $provisionedBilling
                         ) {
                             $output->writeln(
                                 "Will add GSI ["
@@ -162,7 +165,7 @@ class UpdateSchemaCommand extends AbstractSchemaCommand
                                 . "] to table <info>$tableName</info> for class <info>$class</info> ..."
                             );
                             if (!$isDryRun) {
-                                $table->addGlobalSecondaryIndex($idx);
+                                $table->addGlobalSecondaryIndex($idx, $provisionedBilling);
                                 // if there is gsi alteration, we nee to wait before continue
                                 $output->writeln("Will wait for creation of GSI " . $idx->getName() . " ...");
                                 $dynamoManager->waitForTablesToBeFullyReady($tableName, 300, 5);
@@ -186,7 +189,8 @@ class UpdateSchemaCommand extends AbstractSchemaCommand
                                 $class,
                                 $tableName,
                                 $table,
-                                $idx
+                                $idx,
+                                $provisionedBilling
                             ) {
                                 $output->writeln(
                                     "Will update GSI ["
@@ -202,7 +206,7 @@ class UpdateSchemaCommand extends AbstractSchemaCommand
                                     //    "Will sleep 3 seconds before creating new GSI. If the creation fails, you can feel free to run update command again."
                                     //);
                                     //sleep(3);
-                                    $table->addGlobalSecondaryIndex($idx);
+                                    $table->addGlobalSecondaryIndex($idx, $provisionedBilling);
                                     $output->writeln("Will wait for creation of GSI " . $idx->getName() . " ...");
                                     $dynamoManager->waitForTablesToBeFullyReady($tableName, 300, 5);
                                     $output->writeln('Done.');
