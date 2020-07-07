@@ -33,6 +33,10 @@ class Item
      */
     public $billingType = DynamoDbManager::PROVISIONED;
     /**
+     * @var string
+     */
+    public $ttlAttribute = null;
+    /**
      * @var array|Index
      * @Required()
      */

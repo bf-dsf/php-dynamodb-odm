@@ -70,7 +70,7 @@ class CreateSchemaCommand extends AbstractSchemaCommand
             }
 
             $provisionedBilling = $itemDef->billingType === DynamoDbManager::PROVISIONED;
-            
+
             $tableName = $im->getDefaultTablePrefix() . $reflection->getTableName();
             
             $output->writeln("Will create table <info>$tableName</info> for class <info>$class</info> ...");
@@ -82,7 +82,8 @@ class CreateSchemaCommand extends AbstractSchemaCommand
                     $gsis,
                     5,
                     5,
-                    $provisionedBilling
+                    $provisionedBilling,
+                    $itemDef->ttlAttribute
                 );
                 
                 if ($gsis) {

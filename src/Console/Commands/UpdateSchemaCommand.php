@@ -88,7 +88,8 @@ class UpdateSchemaCommand extends AbstractSchemaCommand
                             $gsis,
                             5,
                             5,
-                            $provisionedBilling
+                            $provisionedBilling,
+                            $itemDef->ttlAttribute
                         );
                         
                         $output->writeln('Created.');
