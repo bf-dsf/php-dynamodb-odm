@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: minhao
- * Date: 2016-09-06
- * Time: 12:17
- */
 
 namespace Darlinkster\Mlib\ODM\Dynamodb;
 
@@ -13,8 +7,9 @@ use Darlinkster\Mlib\AwsWrappers\DynamoDbTable;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\UnderlyingDatabaseException;
+use Darlinkster\Mlib\ODM\Dynamodb\Interfaces\ItemRepositoryInterface;
 
-class ItemRepository
+class ItemRepository implements ItemRepositoryInterface
 {
     /** @var  ItemManager */
     protected $itemManager;

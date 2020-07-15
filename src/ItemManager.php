@@ -8,6 +8,7 @@
 
 namespace Darlinkster\Mlib\ODM\Dynamodb;
 
+use Darlinkster\Mlib\ODM\Dynamodb\Interfaces\ItemRepositoryInterface;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Annotations\CachedReader;
@@ -231,7 +232,7 @@ class ItemManager
     /**
      * @param $itemClass
      *
-     * @return ItemRepository
+     * @return ItemRepositoryInterface
      */
     public function getRepository($itemClass)
     {
