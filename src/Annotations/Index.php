@@ -35,6 +35,14 @@ class Index
      * @var string
      */
     public $name = '';
+    /**
+     * @var string
+     */
+    public $projectionType = DynamoDbIndex::PROJECTION_TYPE_ALL;
+    /**
+     * @var array
+     */
+    public $projectedAttributes = [];
     
     public function __construct(array $values)
     {
@@ -46,6 +54,13 @@ class Index
             if (isset($values[2])) {
                 $this->name = $values[2];
             }
+            if (isset($values[3]) && in_array($values[3], DynamoDbIndex::getSupportedProjectionTypes(), true)) {
+                $this->projectionType = $values[3];
+            }
+            if (isset($values[4]) && is_array($values[4]) && $this->projectionType === DynamoDbIndex::PROJECTION_TYPE_INCLUDE) {
+                $this->projectedAttributes = $values[4];
+            }
+
         }
         elseif (isset($values['hash'])) {
             $this->hash = $values['hash'];
@@ -54,6 +69,12 @@ class Index
             }
             if (isset($values['name'])) {
                 $this->name = $values['name'];
+            }
+            if (isset($values['projectionType']) && in_array($values['projectionType'], DynamoDbIndex::getSupportedProjectionTypes(), true)) {
+                $this->projectionType = $values['projectionType'];
+            }
+            if (isset($values['projectedAttributes']) && is_array($values['projectedAttributes']) && $this->projectionType === DynamoDbIndex::PROJECTION_TYPE_INCLUDE) {
+                $this->projectedAttributes = $values['projectedAttributes'];
             }
         }
         else {
@@ -89,7 +110,10 @@ class Index
         $rangeType = $range ? $attributeTypes[$range] : 'string';
         $hashType  = constant(DynamoDbItem::class . '::ATTRIBUTE_TYPE_' . strtoupper($hashType));
         $rangeType = constant(DynamoDbItem::class . '::ATTRIBUTE_TYPE_' . strtoupper($rangeType));
-        $idx       = new DynamoDbIndex($hash, $hashType, $rangeKey, $rangeType);
+        $projectionType = $this->projectionType;
+        $projectedAttributes = $this->projectedAttributes;
+
+        $idx       = new DynamoDbIndex($hash, $hashType, $rangeKey, $rangeType, $projectionType, $projectedAttributes);
         if ($this->name) {
             $idx->setName($this->name);
         }
