@@ -6,10 +6,10 @@
  * Time: 18:41
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Console\Commands;
+namespace BF\Mlib\ODM\Dynamodb\Console\Commands;
 
 use Aws\DynamoDb\Exception\DynamoDbException;
-use Darlinkster\Mlib\AwsWrappers\DynamoDbManager;
+use BF\Mlib\AwsWrappers\DynamoDbManager;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

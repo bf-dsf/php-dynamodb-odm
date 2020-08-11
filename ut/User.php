@@ -6,12 +6,12 @@
  * Time: 17:08
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Ut;
+namespace BF\Mlib\ODM\Dynamodb\Ut;
 
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Field;
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Index;
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Item;
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\PartitionedHashKey;
+use BF\Mlib\ODM\Dynamodb\Annotations\Field;
+use BF\Mlib\ODM\Dynamodb\Annotations\Index;
+use BF\Mlib\ODM\Dynamodb\Annotations\Item;
+use BF\Mlib\ODM\Dynamodb\Annotations\PartitionedHashKey;
 
 /**
  * Class User
@@ -25,7 +25,7 @@ use Darlinkster\Mlib\ODM\Dynamodb\Annotations\PartitionedHashKey;
  *      @Index(hash="hometownPartition", range="age", name="home-age-gsi")
  *     }
  *     )
- * @package Darlinkster\Mlib\ODM\Dynamodb
+ * @package BF\Mlib\ODM\Dynamodb
  */
 class User
 {

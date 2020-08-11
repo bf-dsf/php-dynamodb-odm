@@ -6,10 +6,10 @@
  * Time: 16:13
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb;
+namespace BF\Mlib\ODM\Dynamodb;
 
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Field;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
+use BF\Mlib\ODM\Dynamodb\Annotations\Field;
+use BF\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 
 class ManagedItemState
 {

@@ -6,13 +6,13 @@
  * Time: 18:41
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Console\Commands;
+namespace BF\Mlib\ODM\Dynamodb\Console\Commands;
 
-use Darlinkster\Mlib\AwsWrappers\DynamoDbIndex;
-use Darlinkster\Mlib\AwsWrappers\DynamoDbManager;
-use Darlinkster\Mlib\AwsWrappers\DynamoDbTable;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
-use Darlinkster\Mlib\ODM\Dynamodb\ItemReflection;
+use BF\Mlib\AwsWrappers\DynamoDbIndex;
+use BF\Mlib\AwsWrappers\DynamoDbManager;
+use BF\Mlib\AwsWrappers\DynamoDbTable;
+use BF\Mlib\ODM\Dynamodb\Exceptions\ODMException;
+use BF\Mlib\ODM\Dynamodb\ItemReflection;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;

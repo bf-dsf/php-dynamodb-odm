@@ -6,7 +6,7 @@
  * Time: 17:43
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Exceptions;
+namespace BF\Mlib\ODM\Dynamodb\Exceptions;
 
 class DataConsistencyException extends \RuntimeException
 {

@@ -6,11 +6,11 @@
  * Time: 18:35
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Console\Commands;
+namespace BF\Mlib\ODM\Dynamodb\Console\Commands;
 
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\NotAnnotatedException;
-use Darlinkster\Mlib\ODM\Dynamodb\ItemManager;
-use Darlinkster\Mlib\ODM\Dynamodb\ItemReflection;
+use BF\Mlib\ODM\Dynamodb\Exceptions\NotAnnotatedException;
+use BF\Mlib\ODM\Dynamodb\ItemManager;
+use BF\Mlib\ODM\Dynamodb\ItemReflection;
 use Symfony\Component\Console\Command\Command;
 
 abstract class AbstractSchemaCommand extends Command

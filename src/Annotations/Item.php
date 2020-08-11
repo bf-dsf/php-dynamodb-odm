@@ -6,11 +6,11 @@
  * Time: 18:00
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Annotations;
+namespace BF\Mlib\ODM\Dynamodb\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\Required;
 use Doctrine\Common\Annotations\Annotation\Target;
-use Darlinkster\Mlib\AwsWrappers\DynamoDbManager;
+use BF\Mlib\AwsWrappers\DynamoDbManager;
 
 /**
  * Class Item

@@ -6,7 +6,7 @@
  * Time: 22:10
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Exceptions;
+namespace BF\Mlib\ODM\Dynamodb\Exceptions;
 
 class NotAnnotatedException extends ODMException
 {

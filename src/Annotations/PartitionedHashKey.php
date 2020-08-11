@@ -6,7 +6,7 @@
  * Time: 19:06
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Annotations;
+namespace BF\Mlib\ODM\Dynamodb\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\Required;
 

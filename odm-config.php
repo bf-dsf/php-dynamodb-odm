@@ -6,8 +6,8 @@
  * Time: 11:08
  */
 
-use Darlinkster\Mlib\ODM\Dynamodb\Console\ConsoleHelper;
-use Darlinkster\Mlib\ODM\Dynamodb\ItemManager;
+use BF\Mlib\ODM\Dynamodb\Console\ConsoleHelper;
+use BF\Mlib\ODM\Dynamodb\ItemManager;
 use Symfony\Component\Yaml\Yaml;
 
 // replace with file to your own project bootstrap
@@ -18,6 +18,6 @@ $config = Yaml::parse(file_get_contents(__DIR__ . "/ut/ut.yml"));
 $aws    = $config['dynamodb'];
 
 $im = new ItemManager($aws, $config['prefix'], __DIR__ . "/ut/cache");
-$im->addNamespace('Darlinkster\Mlib\ODM\Dynamodb\Ut', __DIR__ . "/ut");
+$im->addNamespace('BF\Mlib\ODM\Dynamodb\Ut', __DIR__ . "/ut");
 
 return new ConsoleHelper($im);

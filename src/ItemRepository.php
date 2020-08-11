@@ -1,13 +1,13 @@
 <?php
 
-namespace Darlinkster\Mlib\ODM\Dynamodb;
+namespace BF\Mlib\ODM\Dynamodb;
 
-use Darlinkster\Mlib\AwsWrappers\DynamoDbIndex;
-use Darlinkster\Mlib\AwsWrappers\DynamoDbTable;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\UnderlyingDatabaseException;
-use Darlinkster\Mlib\ODM\Dynamodb\Interfaces\ItemRepositoryInterface;
+use BF\Mlib\AwsWrappers\DynamoDbIndex;
+use BF\Mlib\AwsWrappers\DynamoDbTable;
+use BF\Mlib\ODM\Dynamodb\Exceptions\DataConsistencyException;
+use BF\Mlib\ODM\Dynamodb\Exceptions\ODMException;
+use BF\Mlib\ODM\Dynamodb\Exceptions\UnderlyingDatabaseException;
+use BF\Mlib\ODM\Dynamodb\Interfaces\ItemRepositoryInterface;
 
 class ItemRepository implements ItemRepositoryInterface
 {

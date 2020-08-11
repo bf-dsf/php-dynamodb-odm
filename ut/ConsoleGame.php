@@ -6,10 +6,10 @@
  * Time: 16:17
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Ut;
+namespace BF\Mlib\ODM\Dynamodb\Ut;
 
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Field;
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Item;
+use BF\Mlib\ODM\Dynamodb\Annotations\Field;
+use BF\Mlib\ODM\Dynamodb\Annotations\Item;
 
 /**
  * Class ConsoleGame
@@ -21,7 +21,7 @@ use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Item;
  *          {"family", "language"}
  *     }
  * )
- * @package Darlinkster\Mlib\ODM\Dynamodb\Ut
+ * @package BF\Mlib\ODM\Dynamodb\Ut
  */
 class ConsoleGame extends Game
 {

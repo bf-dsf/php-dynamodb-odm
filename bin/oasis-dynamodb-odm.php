@@ -7,7 +7,7 @@
  * Time: 11:07
  */
 
-use Darlinkster\Mlib\ODM\Dynamodb\Console\ConsoleHelper;
+use BF\Mlib\ODM\Dynamodb\Console\ConsoleHelper;
 use Symfony\Component\Console\Application;
 
 $autoloadFiles = [
@@ -39,7 +39,7 @@ project, which is required to get the DynamoDb ODM Console working. You can use 
 following sample as a template:
 
 <?php
-use Darlinkster\Mlib\ODM\Dynamodb\Console\ConsoleHelper;
+use BF\Mlib\ODM\Dynamodb\Console\ConsoleHelper;
 
 // replace with file to your own project bootstrap
 require_once 'bootstrap.php';

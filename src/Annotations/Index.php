@@ -6,19 +6,19 @@
  * Time: 21:19
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Annotations;
+namespace BF\Mlib\ODM\Dynamodb\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\Required;
-use Darlinkster\Mlib\AwsWrappers\DynamoDbIndex;
-use Darlinkster\Mlib\AwsWrappers\DynamoDbItem;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\AnnotationParsingException;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
+use BF\Mlib\AwsWrappers\DynamoDbIndex;
+use BF\Mlib\AwsWrappers\DynamoDbItem;
+use BF\Mlib\ODM\Dynamodb\Exceptions\AnnotationParsingException;
+use BF\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 
 /**
  * Class Index
  *
  * @Annotation
- * @package Darlinkster\Mlib\ODM\Dynamodb\Annotations
+ * @package BF\Mlib\ODM\Dynamodb\Annotations
  */
 class Index
 {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Interfaces;
+namespace BF\Mlib\ODM\Dynamodb\Interfaces;
 
-use Darlinkster\Mlib\AwsWrappers\DynamoDbIndex;
+use BF\Mlib\AwsWrappers\DynamoDbIndex;
 
 interface ItemRepositoryInterface
 {

@@ -6,11 +6,11 @@
  * Time: 21:58
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Ut;
+namespace BF\Mlib\ODM\Dynamodb\Ut;
 
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Field;
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Index;
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Item;
+use BF\Mlib\ODM\Dynamodb\Annotations\Field;
+use BF\Mlib\ODM\Dynamodb\Annotations\Index;
+use BF\Mlib\ODM\Dynamodb\Annotations\Item;
 
 /**
  * Class CasDemoUser
@@ -19,7 +19,7 @@ use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Item;
  *     table="cas-demo-users",
  *     primaryIndex=@Index(hash="id")
  *     )
- * @package Darlinkster\Mlib\ODM\Dynamodb\Ut
+ * @package BF\Mlib\ODM\Dynamodb\Ut
  */
 
 class CasDemoUser

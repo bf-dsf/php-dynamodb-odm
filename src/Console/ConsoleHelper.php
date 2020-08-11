@@ -6,12 +6,12 @@
  * Time: 18:05
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb\Console;
+namespace BF\Mlib\ODM\Dynamodb\Console;
 
-use Darlinkster\Mlib\ODM\Dynamodb\Console\Commands\CreateSchemaCommand;
-use Darlinkster\Mlib\ODM\Dynamodb\Console\Commands\DropSchemaCommand;
-use Darlinkster\Mlib\ODM\Dynamodb\Console\Commands\UpdateSchemaCommand;
-use Darlinkster\Mlib\ODM\Dynamodb\ItemManager;
+use BF\Mlib\ODM\Dynamodb\Console\Commands\CreateSchemaCommand;
+use BF\Mlib\ODM\Dynamodb\Console\Commands\DropSchemaCommand;
+use BF\Mlib\ODM\Dynamodb\Console\Commands\UpdateSchemaCommand;
+use BF\Mlib\ODM\Dynamodb\ItemManager;
 use Symfony\Component\Console\Application;
 
 class ConsoleHelper

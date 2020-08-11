@@ -6,15 +6,15 @@
  * Time: 14:50
  */
 
-namespace Darlinkster\Mlib\ODM\Dynamodb;
+namespace BF\Mlib\ODM\Dynamodb;
 
 use Doctrine\Common\Annotations\Reader;
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Field;
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\Item;
-use Darlinkster\Mlib\ODM\Dynamodb\Annotations\PartitionedHashKey;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\AnnotationParsingException;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\NotAnnotatedException;
-use Darlinkster\Mlib\ODM\Dynamodb\Exceptions\ODMException;
+use BF\Mlib\ODM\Dynamodb\Annotations\Field;
+use BF\Mlib\ODM\Dynamodb\Annotations\Item;
+use BF\Mlib\ODM\Dynamodb\Annotations\PartitionedHashKey;
+use BF\Mlib\ODM\Dynamodb\Exceptions\AnnotationParsingException;
+use BF\Mlib\ODM\Dynamodb\Exceptions\NotAnnotatedException;
+use BF\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 
 class ItemReflection
 {

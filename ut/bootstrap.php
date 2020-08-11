@@ -5,7 +5,7 @@
  * Date: 2016-09-08
  * Time: 20:50
  */
-use Darlinkster\Mlib\ODM\Dynamodb\Ut\UTConfig;
+use BF\Mlib\ODM\Dynamodb\Ut\UTConfig;
 
 require_once __DIR__ . "/../vendor/autoload.php";
 
