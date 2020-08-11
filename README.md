@@ -1,15 +1,15 @@
 # Object Data Mapping component for DynamoDb
 
-The bf/php-dynamodb-odm is an ODM (object data mapping) library for easy use of AWS' powerful key-value database: DynamoDb.
+The bf-dsf/php-dynamodb-odm is an ODM (object data mapping) library for easy use of AWS' powerful key-value database: DynamoDb.
 
 > **NOTE**: this document assumes you have some understanding of what DynamoDB is and the difference between DynamoDB and traditional RDBMS (e.g. MySQL). Some terms and ideas discussed in this document are DynamoDB specific and will not be explained in this documentation. To study DynamoDB, please refer to the [official dev guide](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide)
 
 ## Installation &amp; Configuration
 
-To get bf/php-dynamodb-odm, you can simple require it via `composer`:
+To get bf-dsf/php-dynamodb-odm, you can simple require it via `composer`:
 
 ```bash
-$ composer require bf/php-dynamodb-odm
+$ composer require bf-dsf/php-dynamodb-odm
 ```
 
 ### Class Loading
