@@ -9,6 +9,7 @@
 namespace BF\Mlib\ODM\Dynamodb\Annotations;
 
 use Doctrine\Common\Annotations\Annotation\Required;
+use Doctrine\Common\Annotations\Annotation\Enum;
 use BF\Mlib\AwsWrappers\DynamoDbIndex;
 use BF\Mlib\AwsWrappers\DynamoDbItem;
 use BF\Mlib\ODM\Dynamodb\Exceptions\AnnotationParsingException;
@@ -27,18 +28,23 @@ class Index
      * @Required()
      */
     public $hash = '';
+
     /**
      * @var string
      */
     public $range = '';
+
     /**
      * @var string
      */
     public $name = '';
+
     /**
      * @var string
+     * @Enum({"ALL", "INCLUDE", "KEYS_ONLY"})
      */
     public $projectionType = DynamoDbIndex::PROJECTION_TYPE_ALL;
+
     /**
      * @var array
      */
