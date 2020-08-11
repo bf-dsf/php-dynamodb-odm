@@ -1,5 +1,5 @@
 {
-    "name"        : "bf/php-dynamodb-odm",
+    "name"        : "bf-dsf/php-dynamodb-odm",
     "description" : "PHP ODM for dynamodb",
     "type"        : "library",
     "require"     : {
