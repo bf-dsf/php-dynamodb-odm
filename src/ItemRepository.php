@@ -502,6 +502,24 @@ class ItemRepository implements ItemRepositoryInterface
         }
         
     }
+
+    public function reloadByPrimaryKeys($obj)
+    {
+        if (!$this->itemReflection->getReflectionClass()->isInstance($obj)) {
+            throw new ODMException(
+                "Object refreshed is not of correct type, expected: " . $this->itemReflection->getItemClass()
+            );
+        }
+
+        $id = $this->itemReflection->getPrimaryIdentifier($obj);
+        if (!isset($this->itemManaged[$id])) {
+            throw new ODMException("Object is not managed: " . print_r($obj, true));
+        }
+
+        $objRefreshed = $this->get($this->itemReflection->getPrimaryKeys($obj, false), true);
+        $this->itemManaged[$id]->setItem($objRefreshed);
+        return $objRefreshed;
+    }
     
     public function remove($obj)
     {
