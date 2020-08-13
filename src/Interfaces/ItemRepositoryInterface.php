@@ -53,4 +53,6 @@ interface ItemRepositoryInterface
     public function clear();
 
     public function remove($obj);
+
+    public function reloadByPrimaryKeys($obj);
 }
