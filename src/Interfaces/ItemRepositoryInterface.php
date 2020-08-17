@@ -55,4 +55,21 @@ interface ItemRepositoryInterface
     public function remove($obj);
 
     public function reloadByPrimaryKeys($obj);
+
+    public function queryCount($conditions,
+                               array $params,
+                               $indexName = DynamoDbIndex::PRIMARY_INDEX,
+                               $filterExpression = '',
+                               $isConsistentRead = false);
+
+    public function multiQueryCount($hashKey,
+                                    $hashKeyValues,
+                                    $rangeConditions,
+                                    array $params,
+                                    $indexName,
+                                    $filterExpression = '',
+                                    $isConsistentRead = false,
+                                    $concurrency = 10);
+
+    public function refresh($obj, $persistIfNotManaged = false);
 }
