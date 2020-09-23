@@ -392,6 +392,38 @@ class ItemRepository implements ItemRepositoryInterface
         
         return $ret;
     }
+
+    public function queryBatch($conditions,
+                               array $params,
+                               $indexName = DynamoDbIndex::PRIMARY_INDEX,
+                               $filterExpression = '',
+                               &$lastKey = null,
+                               $evaluationLimit = 30,
+                               $isConsistentRead = false,
+                               $isAscendingOrder = true)
+    {
+        $fields  = array_merge($this->getFieldsArray($conditions), $this->getFieldsArray($filterExpression));
+        $results = $this->dynamodbTable->query(
+            $conditions,
+            $fields,
+            $params,
+            $indexName,
+            $filterExpression,
+            $lastKey,
+            $evaluationLimit,
+            $isConsistentRead,
+            $isAscendingOrder,
+            $this->itemReflection->getProjectedAttributes()
+        );
+
+        $keys = [];
+        foreach ($results as $result) {
+            $keys[] = $this->itemReflection->getPrimaryKeys($result);
+        }
+        $results = $this->batchGet($keys);
+
+        return $results;
+    }
     
     /**
      * @param string $conditions

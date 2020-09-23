@@ -18,6 +18,15 @@ interface ItemRepositoryInterface
                           $isConsistentRead = false,
                           $isAscendingOrder = true);
 
+    public function queryBatch($conditions,
+                               array $params,
+                               $indexName = DynamoDbIndex::PRIMARY_INDEX,
+                               $filterExpression = '',
+                               &$lastKey = null,
+                               $evaluationLimit = 30,
+                               $isConsistentRead = false,
+                               $isAscendingOrder = true);
+
     public function queryAll($conditions = '',
                              array $params = [],
                              $indexName = DynamoDbIndex::PRIMARY_INDEX,
