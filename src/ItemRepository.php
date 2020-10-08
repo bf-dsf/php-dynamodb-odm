@@ -417,12 +417,26 @@ class ItemRepository implements ItemRepositoryInterface
         );
 
         $keys = [];
+        $resultKeys = [];
         foreach ($results as $result) {
-            $keys[] = $this->itemReflection->getPrimaryKeys($result);
+            $primaryKeys = $this->itemReflection->getPrimaryKeys($result);
+            $keys[] = $primaryKeys;
+            $identifier = array_key_first($primaryKeys);
+            $resultKeys[$primaryKeys[$identifier]] = $identifier;
         }
+
         $results = $this->batchGet($keys);
 
-        return $results;
+        foreach ($resultKeys as $primaryKey => $primaryKeyName) {
+            foreach ($results as $result) {
+                $getter = 'get'.ucfirst($primaryKeyName);
+                if ($primaryKey === $result->$getter()) {
+                    $resultKeys[$primaryKey] = $result;
+                }
+            }
+        }
+
+        return array_values($resultKeys);
     }
     
     /**
