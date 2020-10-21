@@ -17,18 +17,18 @@ class ItemRepository implements ItemRepositoryInterface
     protected $itemReflection;
     /** @var  DynamoDbTable */
     protected $dynamodbTable;
-    
+
     /**
      * @var ManagedItemState[]
      * Maps object id to managed object
      */
     protected $itemManaged = [];
-    
+
     public function __construct(ItemReflection $itemReflection, ItemManager $itemManager)
     {
         $this->itemManager    = $itemManager;
         $this->itemReflection = $itemReflection;
-        
+
         // initialize table
         $tableName           = $itemManager->getDefaultTablePrefix() . $this->itemReflection->getTableName();
         $this->dynamodbTable = new DynamoDbTable(
@@ -37,8 +37,8 @@ class ItemRepository implements ItemRepositoryInterface
             $this->itemReflection->getAttributeTypes()
         );
     }
-    
-    public function batchGet($groupOfKeys, $isConsistentRead = false)
+
+    public function batchGet($groupOfKeys, $isConsistentRead = false, $indexName = DynamoDbIndex::PRIMARY_INDEX)
     {
         /** @var string[] $fieldNameMapping */
         $fieldNameMapping      = $this->itemReflection->getFieldNameMapping();
@@ -63,22 +63,22 @@ class ItemRepository implements ItemRepositoryInterface
         if (is_array($resultSet)) {
             $ret = [];
             foreach ($resultSet as $singleResult) {
-                $obj   = $this->persistFetchedItemData($singleResult);
+                $obj   = $this->persistFetchedItemData($singleResult, $indexName);
                 $ret[] = $obj;
             }
-            
+
             return $ret;
         }
         else {
             throw new UnderlyingDatabaseException("Result returned from dynamodb for BatchGet() is not an array!");
         }
     }
-    
+
     public function clear()
     {
         $this->itemManaged = [];
     }
-    
+
     public function detach($obj)
     {
         if (!$this->itemReflection->getReflectionClass()->isInstance($obj)) {
@@ -90,14 +90,14 @@ class ItemRepository implements ItemRepositoryInterface
         if (!isset($this->itemManaged[$id])) {
             throw new ODMException("Object is not managed: " . print_r($obj, true));
         }
-        
+
         unset($this->itemManaged[$id]);
     }
-    
+
     public function flush()
     {
         $skipCAS               = $this->itemManager->shouldSkipCheckAndSet()
-                                 || (count($this->itemReflection->getCasProperties()) == 0);
+            || (count($this->itemReflection->getCasProperties()) == 0);
         $removed               = [];
         $batchRemovalKeys      = [];
         $batchSetItems         = [];
@@ -118,10 +118,10 @@ class ItemRepository implements ItemRepositoryInterface
                         )
                     );
                 }
-                
+
                 $managedItemState->updateCASTimestamps();
                 $managedItemState->updatePartitionedHashKeys();
-                
+
                 if ($skipCAS) {
                     $batchSetItems[] = $this->itemReflection->dehydrate($item);
                     $batchNewItemStates->push($managedItemState);
@@ -140,6 +140,9 @@ class ItemRepository implements ItemRepositoryInterface
                     $managedItemState->setUpdated();
                 }
             }
+            elseif ($managedItemState->isStub()) {
+                // Do nothing
+            }
             else {
                 $hasData = $managedItemState->hasDirtyData();
                 if ($hasData) {
@@ -152,7 +155,7 @@ class ItemRepository implements ItemRepositoryInterface
                             )
                         );
                     }
-                    
+
                     $managedItemState->updateCASTimestamps();
                     $managedItemState->updatePartitionedHashKeys();
                     if ($skipCAS) {
@@ -160,7 +163,7 @@ class ItemRepository implements ItemRepositoryInterface
                         $batchUpdateItemStates->push($managedItemState);
                     }
                     else {
-                        
+
                         $ret = $this->dynamodbTable->set(
                             $this->itemReflection->dehydrate($item),
                             $managedItemState->getCheckConditionData()
@@ -194,7 +197,7 @@ class ItemRepository implements ItemRepositoryInterface
             unset($this->itemManaged[$id]);
         }
     }
-    
+
     public function get($keys, $isConsistentRead = false)
     {
         /** @var string[] $fieldNameMapping */
@@ -207,7 +210,7 @@ class ItemRepository implements ItemRepositoryInterface
             $k                  = $fieldNameMapping[$k];
             $translatedKeys[$k] = $v;
         }
-        
+
         // return existing item
         if (!$isConsistentRead) {
             $id = $this->itemReflection->getPrimaryIdentifier($translatedKeys);
@@ -215,7 +218,7 @@ class ItemRepository implements ItemRepositoryInterface
                 return $this->itemManaged[$id]->getItem();
             }
         }
-        
+
         $result = $this->dynamodbTable->get(
             $translatedKeys,
             $isConsistentRead,
@@ -223,7 +226,7 @@ class ItemRepository implements ItemRepositoryInterface
         );
         if (is_array($result)) {
             $obj = $this->persistFetchedItemData($result);
-            
+
             return $obj;
         }
         elseif ($result === null) {
@@ -233,7 +236,7 @@ class ItemRepository implements ItemRepositoryInterface
             throw new UnderlyingDatabaseException("Result returned from dynamodb is not an array!");
         }
     }
-    
+
     public function multiQueryAndRun(callable $callback,
                                      $hashKey,
                                      $hashKeyValues,
@@ -259,8 +262,8 @@ class ItemRepository implements ItemRepositoryInterface
         $fields = array_merge($this->getFieldsArray($rangeConditions), $this->getFieldsArray($filterExpression));
         $this->dynamodbTable->multiQueryAndRun(
             function ($result) use ($callback) {
-                $obj = $this->persistFetchedItemData($result);
-                
+                $obj = $this->persistFetchedItemData($result, $indexName);
+
                 return call_user_func($callback, $obj);
             },
             $hashKey,
@@ -277,7 +280,7 @@ class ItemRepository implements ItemRepositoryInterface
             $this->itemReflection->getProjectedAttributes()
         );
     }
-    
+
     public function multiQueryCount($hashKey,
                                     $hashKeyValues,
                                     $rangeConditions,
@@ -316,10 +319,10 @@ class ItemRepository implements ItemRepositoryInterface
             $concurrency,
             $this->itemReflection->getProjectedAttributes()
         );
-        
+
         return $count;
     }
-    
+
     public function parallelScanAndRun($parallel,
                                        callable $callback,
                                        $conditions = '',
@@ -333,8 +336,8 @@ class ItemRepository implements ItemRepositoryInterface
         $this->dynamodbTable->parallelScanAndRun(
             $parallel,
             function ($result) use ($callback) {
-                $obj = $this->persistFetchedItemData($result);
-                
+                $obj = $this->persistFetchedItemData($result, $indexName);
+
                 return call_user_func($callback, $obj);
             },
             $conditions,
@@ -346,7 +349,7 @@ class ItemRepository implements ItemRepositoryInterface
             $this->itemReflection->getProjectedAttributes()
         );
     }
-    
+
     public function persist($obj)
     {
         if (!$this->itemReflection->getReflectionClass()->isInstance($obj)) {
@@ -356,12 +359,12 @@ class ItemRepository implements ItemRepositoryInterface
         if (isset($this->itemManaged[$id])) {
             throw new ODMException("Persisting existing object: " . print_r($obj, true));
         }
-        
+
         $managedState = new ManagedItemState($this->itemReflection, $obj);
         $managedState->setState(ManagedItemState::STATE_NEW);
         $this->itemManaged[$id] = $managedState;
     }
-    
+
     public function query($conditions,
                           array $params,
                           $indexName = DynamoDbIndex::PRIMARY_INDEX,
@@ -386,10 +389,10 @@ class ItemRepository implements ItemRepositoryInterface
         );
         $ret     = [];
         foreach ($results as $result) {
-            $obj   = $this->persistFetchedItemData($result);
+            $obj   = $this->persistFetchedItemData($result, $indexName);
             $ret[] = $obj;
         }
-        
+
         return $ret;
     }
 
@@ -425,7 +428,7 @@ class ItemRepository implements ItemRepositoryInterface
             $resultKeys[$primaryKeys[$identifier]] = $identifier;
         }
 
-        $results = $this->batchGet($keys);
+        $results = $this->batchGet($keys, $isConsistentRead, $indexName);
 
         foreach ($resultKeys as $primaryKey => $primaryKeyName) {
             foreach ($results as $result) {
@@ -438,7 +441,7 @@ class ItemRepository implements ItemRepositoryInterface
 
         return array_values($resultKeys);
     }
-    
+
     /**
      * @param string $conditions
      * @param array  $params
@@ -468,10 +471,10 @@ class ItemRepository implements ItemRepositoryInterface
             $isConsistentRead,
             $isAscendingOrder
         );
-        
+
         return $ret;
     }
-    
+
     public function queryAndRun(callable $callback,
                                 $conditions = '',
                                 array $params = [],
@@ -483,8 +486,8 @@ class ItemRepository implements ItemRepositoryInterface
         $fields = array_merge($this->getFieldsArray($conditions), $this->getFieldsArray($filterExpression));
         $this->dynamodbTable->queryAndRun(
             function ($result) use ($callback) {
-                $obj = $this->persistFetchedItemData($result);
-                
+                $obj = $this->persistFetchedItemData($result, $indexName);
+
                 return call_user_func($callback, $obj);
             },
             $conditions,
@@ -497,7 +500,7 @@ class ItemRepository implements ItemRepositoryInterface
             $this->itemReflection->getProjectedAttributes()
         );
     }
-    
+
     public function queryCount($conditions,
                                array $params,
                                $indexName = DynamoDbIndex::PRIMARY_INDEX,
@@ -505,7 +508,7 @@ class ItemRepository implements ItemRepositoryInterface
                                $isConsistentRead = false)
     {
         $fields = array_merge($this->getFieldsArray($conditions), $this->getFieldsArray($filterExpression));
-        
+
         return $this->dynamodbTable->queryCount(
             $conditions,
             $fields,
@@ -515,7 +518,7 @@ class ItemRepository implements ItemRepositoryInterface
             $isConsistentRead
         );
     }
-    
+
     public function refresh($obj, $persistIfNotManaged = false)
     {
         if (!$this->itemReflection->getReflectionClass()->isInstance($obj)) {
@@ -523,14 +526,14 @@ class ItemRepository implements ItemRepositoryInterface
                 "Object refreshed is not of correct type, expected: " . $this->itemReflection->getItemClass()
             );
         }
-        
+
         // 2017-03-24: we can refresh something that's not managed
         //$id = $this->itemReflection->getPrimaryIdentifier($obj);
         //if (!isset($this->itemManaged[$id])) {
         //    throw new ODMException("Object is not managed: " . print_r($obj, true));
         //}
         // end of change 2017-03-24
-        
+
         $id = $this->itemReflection->getPrimaryIdentifier($obj);
         if (!isset($this->itemManaged[$id])) {
             if ($persistIfNotManaged) {
@@ -540,13 +543,13 @@ class ItemRepository implements ItemRepositoryInterface
                 throw new ODMException("Object is not managed: " . print_r($obj, true));
             }
         }
-        
+
         $objRefreshed = $this->get($this->itemReflection->getPrimaryKeys($obj, false), true);
-        
+
         if (!$objRefreshed && $persistIfNotManaged) {
             $this->itemManaged[$id]->setState(ManagedItemState::STATE_NEW);
         }
-        
+
     }
 
     public function reloadByPrimaryKeys($obj)
@@ -566,7 +569,7 @@ class ItemRepository implements ItemRepositoryInterface
         $this->itemManaged[$id]->setItem($objRefreshed);
         return $objRefreshed;
     }
-    
+
     public function remove($obj)
     {
         if (!$this->itemReflection->getReflectionClass()->isInstance($obj)) {
@@ -578,10 +581,10 @@ class ItemRepository implements ItemRepositoryInterface
         if (!isset($this->itemManaged[$id])) {
             throw new ODMException("Object is not managed: " . print_r($obj, true));
         }
-        
+
         $this->itemManaged[$id]->setState(ManagedItemState::STATE_REMOVED);
     }
-    
+
     public function removeAll()
     {
         do {
@@ -592,7 +595,7 @@ class ItemRepository implements ItemRepositoryInterface
                     if (count($this->itemManaged) > 1000) {
                         return false;
                     }
-                    
+
                     return true;
                 },
                 '',
@@ -610,9 +613,9 @@ class ItemRepository implements ItemRepositoryInterface
             $this->flush();
             $this->itemManager->setSkipCheckAndSet($skipCAS);
         } while (true);
-        
+
     }
-    
+
     public function removeById($keys)
     {
         $obj = $this->get($keys, true);
@@ -620,7 +623,7 @@ class ItemRepository implements ItemRepositoryInterface
             $this->remove($obj);
         }
     }
-    
+
     public function scan($conditions = '',
                          array $params = [],
                          $indexName = DynamoDbIndex::PRIMARY_INDEX,
@@ -643,13 +646,13 @@ class ItemRepository implements ItemRepositoryInterface
         );
         $ret     = [];
         foreach ($results as $result) {
-            $obj   = $this->persistFetchedItemData($result);
+            $obj   = $this->persistFetchedItemData($result, $indexName);
             $ret[] = $obj;
         }
-        
+
         return $ret;
     }
-    
+
     /**
      * @param string $conditions
      * @param array  $params
@@ -679,10 +682,10 @@ class ItemRepository implements ItemRepositoryInterface
             $isAscendingOrder,
             $parallel
         );
-        
+
         return $ret;
     }
-    
+
     public function scanAndRun(callable $callback,
                                $conditions = '',
                                array $params = [],
@@ -693,13 +696,13 @@ class ItemRepository implements ItemRepositoryInterface
     )
     {
         $resultCallback = function ($result) use ($callback) {
-            $obj = $this->persistFetchedItemData($result);
-            
+            $obj = $this->persistFetchedItemData($result, $indexName);
+
             return call_user_func($callback, $obj);
         };
-        
+
         $fields = $this->getFieldsArray($conditions);
-        
+
         if ($parallel > 1) {
             $this->dynamodbTable->parallelScanAndRun(
                 $parallel,
@@ -729,7 +732,7 @@ class ItemRepository implements ItemRepositoryInterface
             throw new \InvalidArgumentException("Parallel can only be an integer greater than 0");
         }
     }
-    
+
     public function scanCount($conditions = '',
                               array $params = [],
                               $indexName = DynamoDbIndex::PRIMARY_INDEX,
@@ -737,7 +740,7 @@ class ItemRepository implements ItemRepositoryInterface
                               $parallel = 10)
     {
         $fields = $this->getFieldsArray($conditions);
-        
+
         return $this->dynamodbTable->scanCount(
             $conditions,
             $fields,
@@ -747,7 +750,7 @@ class ItemRepository implements ItemRepositoryInterface
             $parallel
         );
     }
-    
+
     /**
      * @internal    only for advanced user, avoid using the table client directly whenever possible.
      * @deprecated  this interface might be removed any time in the future
@@ -758,14 +761,14 @@ class ItemRepository implements ItemRepositoryInterface
     {
         return $this->dynamodbTable;
     }
-    
+
     protected function getFieldsArray($conditions)
     {
         $ret = preg_match_all('/#(?P<field>[a-zA-Z_][a-zA-Z0-9_]*)/', $conditions, $matches);
         if (!$ret) {
             return [];
         }
-        
+
         $result           = [];
         $fieldNameMapping = $this->itemReflection->getFieldNameMapping();
         if (isset($matches['field']) && is_array($matches['field'])) {
@@ -776,11 +779,11 @@ class ItemRepository implements ItemRepositoryInterface
                 $result["#" . $fieldName] = $fieldNameMapping[$fieldName];
             }
         }
-        
+
         return $result;
     }
-    
-    protected function persistFetchedItemData(array $resultData)
+
+    protected function persistFetchedItemData(array $resultData, string $indexName = DynamoDbIndex::PRIMARY_INDEX)
     {
         $id = $this->itemReflection->getPrimaryIdentifier($resultData);
         if (isset($this->itemManaged[$id])) {
@@ -790,16 +793,23 @@ class ItemRepository implements ItemRepositoryInterface
             elseif ($this->itemManaged[$id]->isRemoved()) {
                 throw new ODMException("Conflict! Fetched remote data is also removed. " . json_encode($resultData));
             }
-            
+
             $obj = $this->itemManaged[$id]->getItem();
             $this->itemReflection->hydrate($resultData, $obj);
             $this->itemManaged[$id]->setOriginalData($resultData);
         }
         else {
-            $obj                    = $this->itemReflection->hydrate($resultData);
-            $this->itemManaged[$id] = new ManagedItemState($this->itemReflection, $obj, $resultData);
+            $obj = $this->itemReflection->hydrate($resultData);
+            $managed = new ManagedItemState($this->itemReflection, $obj, $resultData);
+            /** @var DynamoDbIndex $index */
+            $index = $this->dynamodbTable->getGlobalSecondaryIndices()[$indexName];
+            if ($indexName !== DynamoDbIndex::PRIMARY_INDEX &&
+                $index->getProjectionType() === DynamoDbIndex::PROJECTION_TYPE_KEYS_ONLY) {
+                $managed->setState(ManagedItemState::STATE_MANAGED_STUB);
+            }
+            $this->itemManaged[$id] = $managed;
         }
-        
+
         return $obj;
     }
 }
