@@ -416,24 +416,25 @@ class ItemRepository implements ItemRepositoryInterface
             $this->itemReflection->getProjectedAttributes()
         );
 
+        if (empty($results)) {
+            return $results;
+        }
+
         $keys = [];
         $resultKeys = [];
         foreach ($results as $result) {
             $primaryKeys = $this->itemReflection->getPrimaryKeys($result);
             $keys[] = $primaryKeys;
-            $identifier = array_key_first($primaryKeys);
-            $resultKeys[$primaryKeys[$identifier]] = $identifier;
+            $hashKey = md5(serialize($primaryKeys));
+            $resultKeys[$hashKey] = $primaryKeys;
         }
 
         $results = $this->batchGet($keys);
 
-        foreach ($resultKeys as $primaryKey => $primaryKeyName) {
-            foreach ($results as $result) {
-                $getter = 'get'.ucfirst($primaryKeyName);
-                if ($primaryKey === $result->$getter()) {
-                    $resultKeys[$primaryKey] = $result;
-                }
-            }
+        foreach ($results as $result) {
+            $primaryKeys = $this->itemReflection->getPrimaryKeys($result);
+            $hashKey = md5(serialize($primaryKeys));
+            $resultKeys[$hashKey] = $result;
         }
 
         return array_values($resultKeys);
