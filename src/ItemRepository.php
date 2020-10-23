@@ -802,11 +802,16 @@ class ItemRepository implements ItemRepositoryInterface
         else {
             $obj = $this->itemReflection->hydrate($resultData);
             $managed = new ManagedItemState($this->itemReflection, $obj, $resultData);
-            /** @var DynamoDbIndex $index */
-            $index = $this->dynamodbTable->getGlobalSecondaryIndices()[$indexName];
-            if ($indexName !== DynamoDbIndex::PRIMARY_INDEX &&
-                $index->getProjectionType() === DynamoDbIndex::PROJECTION_TYPE_KEYS_ONLY) {
-                $managed->setState(ManagedItemState::STATE_MANAGED_STUB);
+            $indexes = $this->dynamodbTable->getGlobalSecondaryIndices();
+            if ( ! empty($indexes) && $indexName !== DynamoDbIndex::PRIMARY_INDEX) {
+                if ( ! isset($indexes[$indexName])) {
+                    throw new ODMException("Conflict! Index '".$indexName."' is not defined. Indexes: " . json_encode($indexes));
+                }
+                /** @var DynamoDbIndex $index */
+                $index = $indexes[$indexName];
+                if ($index->getProjectionType() === DynamoDbIndex::PROJECTION_TYPE_KEYS_ONLY) {
+                    $managed->setState(ManagedItemState::STATE_MANAGED_STUB);
+                }
             }
             $this->itemManaged[$id] = $managed;
         }
