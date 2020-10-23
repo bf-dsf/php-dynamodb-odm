@@ -261,7 +261,7 @@ class ItemRepository implements ItemRepositoryInterface
         }
         $fields = array_merge($this->getFieldsArray($rangeConditions), $this->getFieldsArray($filterExpression));
         $this->dynamodbTable->multiQueryAndRun(
-            function ($result) use ($callback) {
+            function ($result) use ($callback, $indexName) {
                 $obj = $this->persistFetchedItemData($result, $indexName);
 
                 return call_user_func($callback, $obj);
@@ -335,7 +335,7 @@ class ItemRepository implements ItemRepositoryInterface
         $fields = $this->getFieldsArray($conditions);
         $this->dynamodbTable->parallelScanAndRun(
             $parallel,
-            function ($result) use ($callback) {
+            function ($result) use ($callback, $indexName) {
                 $obj = $this->persistFetchedItemData($result, $indexName);
 
                 return call_user_func($callback, $obj);
@@ -419,24 +419,25 @@ class ItemRepository implements ItemRepositoryInterface
             $this->itemReflection->getProjectedAttributes()
         );
 
+        if (empty($results)) {
+            return $results;
+        }
+
         $keys = [];
         $resultKeys = [];
         foreach ($results as $result) {
             $primaryKeys = $this->itemReflection->getPrimaryKeys($result);
             $keys[] = $primaryKeys;
-            $identifier = array_key_first($primaryKeys);
-            $resultKeys[$primaryKeys[$identifier]] = $identifier;
+            $hashKey = md5(serialize($primaryKeys));
+            $resultKeys[$hashKey] = $primaryKeys;
         }
 
-        $results = $this->batchGet($keys, $isConsistentRead, $indexName);
+        $results = $this->batchGet($keys);
 
-        foreach ($resultKeys as $primaryKey => $primaryKeyName) {
-            foreach ($results as $result) {
-                $getter = 'get'.ucfirst($primaryKeyName);
-                if ($primaryKey === $result->$getter()) {
-                    $resultKeys[$primaryKey] = $result;
-                }
-            }
+        foreach ($results as $result) {
+            $primaryKeys = $this->itemReflection->getPrimaryKeys($result);
+            $hashKey = md5(serialize($primaryKeys));
+            $resultKeys[$hashKey] = $result;
         }
 
         return array_values($resultKeys);
@@ -485,7 +486,7 @@ class ItemRepository implements ItemRepositoryInterface
     {
         $fields = array_merge($this->getFieldsArray($conditions), $this->getFieldsArray($filterExpression));
         $this->dynamodbTable->queryAndRun(
-            function ($result) use ($callback) {
+            function ($result) use ($callback, $indexName) {
                 $obj = $this->persistFetchedItemData($result, $indexName);
 
                 return call_user_func($callback, $obj);
@@ -695,7 +696,7 @@ class ItemRepository implements ItemRepositoryInterface
                                $parallel = 1
     )
     {
-        $resultCallback = function ($result) use ($callback) {
+        $resultCallback = function ($result) use ($callback, $indexName) {
             $obj = $this->persistFetchedItemData($result, $indexName);
 
             return call_user_func($callback, $obj);
@@ -783,7 +784,7 @@ class ItemRepository implements ItemRepositoryInterface
         return $result;
     }
 
-    protected function persistFetchedItemData(array $resultData, string $indexName = DynamoDbIndex::PRIMARY_INDEX)
+    protected function persistFetchedItemData(array $resultData, $indexName = DynamoDbIndex::PRIMARY_INDEX)
     {
         $id = $this->itemReflection->getPrimaryIdentifier($resultData);
         if (isset($this->itemManaged[$id])) {
