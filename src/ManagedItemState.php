@@ -13,10 +13,11 @@ use BF\Mlib\ODM\Dynamodb\Exceptions\ODMException;
 
 class ManagedItemState
 {
-    const STATE_NEW     = 1;
-    const STATE_MANAGED = 2;
-    const STATE_REMOVED = 3;
-    
+    const STATE_NEW          = 1;
+    const STATE_MANAGED      = 2;
+    const STATE_REMOVED      = 3;
+    const STATE_MANAGED_STUB = 4;
+
     /** @var  ItemReflection */
     protected $itemReflection;
     protected $item;
@@ -25,45 +26,52 @@ class ManagedItemState
      */
     protected $originalData;
     protected $state = self::STATE_MANAGED;
-    
+
     public function __construct(ItemReflection $itemReflection, $item, array $originalData = [])
     {
         $this->itemReflection = $itemReflection;
         $this->item           = $item;
         $this->originalData   = $originalData;
     }
-    
+
     public function hasDirtyData()
     {
         if ($this->state != self::STATE_MANAGED) {
             return false;
         }
-        
+
         $data = $this->itemReflection->dehydrate($this->item);
         if (!$this->isDataEqual($data, $this->originalData)) {
             return true;
         }
-        else {
-            return false;
-        }
+
+        return false;
     }
-    
+
     /**
      * @return boolean
      */
     public function isNew()
     {
-        return $this->state == self::STATE_NEW;
+        return $this->state === self::STATE_NEW;
     }
-    
+
     /**
      * @return boolean
      */
     public function isRemoved()
     {
-        return $this->state == self::STATE_REMOVED;
+        return $this->state === self::STATE_REMOVED;
     }
-    
+
+    /**
+     * @return boolean
+     */
+    public function isStub()
+    {
+        return $this->state === self::STATE_MANAGED_STUB;
+    }
+
     public function updatePartitionedHashKeys($hashFunction = null)
     {
         foreach ($this->itemReflection->getPartitionedHashKeys() as $partitionedHashKey => $def) {
@@ -78,7 +86,7 @@ class ManagedItemState
             $this->itemReflection->updateProperty($this->item, $partitionedHashKey, $hashResult);
         }
     }
-    
+
     public function updateCASTimestamps($timestampOffset = 0)
     {
         $now = time() + $timestampOffset;
@@ -88,7 +96,7 @@ class ManagedItemState
             }
         }
     }
-    
+
     /**
      * @return array
      */
@@ -99,10 +107,10 @@ class ManagedItemState
             $fieldName               = $this->itemReflection->getFieldNameByPropertyName($propertyName);
             $checkValues[$fieldName] = isset($this->originalData[$fieldName]) ? $this->originalData[$fieldName] : null;
         }
-        
+
         return $checkValues;
     }
-    
+
     /**
      * @return mixed
      */
@@ -110,7 +118,7 @@ class ManagedItemState
     {
         return $this->item;
     }
-    
+
     /**
      * @param mixed $item
      */
@@ -118,7 +126,7 @@ class ManagedItemState
     {
         $this->item = $item;
     }
-    
+
     /**
      * @return array
      */
@@ -126,7 +134,7 @@ class ManagedItemState
     {
         return $this->originalData;
     }
-    
+
     /**
      * @param array $originalData
      */
@@ -134,17 +142,16 @@ class ManagedItemState
     {
         $this->originalData = $originalData;
     }
-    
+
     public function getOriginalValue($key)
     {
         if (isset($this->originalData[$key])) {
             return $this->originalData[$key];
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
-    
+
     /**
      * @param int $state
      */
@@ -152,12 +159,12 @@ class ManagedItemState
     {
         $this->state = $state;
     }
-    
+
     public function setUpdated()
     {
         $this->originalData = $this->itemReflection->dehydrate($this->item);
     }
-    
+
     protected function isDataEqual(&$a, &$b)
     {
         // empty string is considered null in dynamodb
@@ -167,11 +174,11 @@ class ManagedItemState
         ) {
             return true;
         }
-        
+
         if (gettype($a) != gettype($b)) {
             return false;
         }
-        
+
         switch (true) {
             case (is_double($a)):
                 return "$a" == "$b";
@@ -188,7 +195,7 @@ class ManagedItemState
                         return false;
                     }
                 }
-                
+
                 // every $k in $a can be found in $b and is equal
                 return true;
                 break;
