@@ -549,6 +549,8 @@ class ItemRepository implements ItemRepositoryInterface
 
         if (!$objRefreshed && $persistIfNotManaged) {
             $this->itemManaged[$id]->setState(ManagedItemState::STATE_NEW);
+        } else if ($this->itemManaged[$id]->isStub()) {
+            $this->itemManaged[$id]->setState(ManagedItemState::STATE_MANAGED);
         }
 
     }
@@ -568,6 +570,9 @@ class ItemRepository implements ItemRepositoryInterface
 
         $objRefreshed = $this->get($this->itemReflection->getPrimaryKeys($obj, false), true);
         $this->itemManaged[$id]->setItem($objRefreshed);
+        if ($this->itemManaged[$id]->isStub()) {
+            $this->itemManaged[$id]->setState(ManagedItemState::STATE_MANAGED);
+        }
         return $objRefreshed;
     }
 
