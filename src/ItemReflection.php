@@ -323,7 +323,7 @@ class ItemReflection
             if (is_array($obj)) {
                 if (!isset($obj[$attributeKey])) {
                     throw new ODMException(
-                        "Cannot get identifier for incomplete object! <" . $attributeKey . "> is empty!"
+                        "Cannot get identifier for incomplete object! <" . $attributeKey . "> is empty! Table <".$this->itemDefinition->table."> Object (serialized) <".serialize($obj)."> Trace: ".json_encode(debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 30))
                     );
                 }
                 $value = $obj[$attributeKey];
