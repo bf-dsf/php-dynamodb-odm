@@ -38,7 +38,12 @@ class ItemRepository implements ItemRepositoryInterface
         );
     }
 
-    public function batchGet($groupOfKeys, $isConsistentRead = false, $indexName = DynamoDbIndex::PRIMARY_INDEX)
+    public function batchGet($groupOfKeys,
+                             $isConsistentRead = false,
+                             $indexName = DynamoDbIndex::PRIMARY_INDEX,
+                             $concurrency = 10,
+                             $retryDelay = 0,
+                             $maxDelay = 15000)
     {
         /** @var string[] $fieldNameMapping */
         $fieldNameMapping      = $this->itemReflection->getFieldNameMapping();
@@ -57,8 +62,11 @@ class ItemRepository implements ItemRepositoryInterface
         $resultSet = $this->dynamodbTable->batchGet(
             $groupOfTranslatedKeys,
             $isConsistentRead,
-            10,
-            $this->itemReflection->getProjectedAttributes()
+            $concurrency,
+            $this->itemReflection->getProjectedAttributes(),
+            false,
+            $retryDelay,
+            $maxDelay
         );
         if (is_array($resultSet)) {
             $ret = [];
@@ -403,7 +411,10 @@ class ItemRepository implements ItemRepositoryInterface
                                &$lastKey = null,
                                $evaluationLimit = 30,
                                $isConsistentRead = false,
-                               $isAscendingOrder = true)
+                               $isAscendingOrder = true,
+                               $concurrency = 10,
+                               $retryDelay = 0,
+                               $maxDelay = 15000)
     {
         $fields  = array_merge($this->getFieldsArray($conditions), $this->getFieldsArray($filterExpression));
         $results = $this->dynamodbTable->query(
@@ -432,7 +443,7 @@ class ItemRepository implements ItemRepositoryInterface
             $resultKeys[$hashKey] = $primaryKeys;
         }
 
-        $results = $this->batchGet($keys);
+        $results = $this->batchGet($keys, false, DynamoDbIndex::PRIMARY_INDEX, $concurrency, $retryDelay, $maxDelay);
 
         foreach ($results as $result) {
             $primaryKeys = $this->itemReflection->getPrimaryKeys($result);
