@@ -25,7 +25,10 @@ interface ItemRepositoryInterface
                                &$lastKey = null,
                                $evaluationLimit = 30,
                                $isConsistentRead = false,
-                               $isAscendingOrder = true);
+                               $isAscendingOrder = true,
+                               $concurrency = 10,
+                               $retryDelay = 0,
+                               $maxDelay = 15000);
 
     public function queryAll($conditions = '',
                              array $params = [],
