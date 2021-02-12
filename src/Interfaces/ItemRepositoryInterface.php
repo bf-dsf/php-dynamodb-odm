@@ -84,4 +84,11 @@ interface ItemRepositoryInterface
                                     $concurrency = 10);
 
     public function refresh($obj, $persistIfNotManaged = false);
+
+    public function batchGet($groupOfKeys,
+                             $isConsistentRead = false,
+                             $indexName = DynamoDbIndex::PRIMARY_INDEX,
+                             $concurrency = 10,
+                             $retryDelay = 0,
+                             $maxDelay = 15000);
 }
